@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
           STATUS_ROLL_ADMIN
         ),
         allowNull: false,
-        defaultValue: STATUS_ROLL_GUEST,
+        defaultValue: STATUS_ROLL_USER,
       },
     },
     { underscored: true }
