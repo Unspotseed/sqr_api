@@ -8,7 +8,9 @@ const morgan = require('morgan'); // help to log info in terminal
 const helmet = require('helmet'); // to protect secure by http (xss csrf clickJacking)
 const rateLimit = require('express-rate-limit');
 
+const authenticate = require('./middleware/authenticate');
 const authRoute = require('./routes/auth-route');
+const bookingRoute = require('./routes/booking-route');
 const errorMiddleware = require('./middleware/error');
 const notFoundMiddleware = require('./middleware/not-found');
 
@@ -28,6 +30,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/auth', authRoute);
+app.use('/booking', authenticate, bookingRoute);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

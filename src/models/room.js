@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       // priceRoom: DataTypes.INTEGER,
       priceRoom: DataTypes.INTEGER,
+      floor: DataTypes.INTEGER,
     },
     { underscored: true }
   );
