@@ -11,6 +11,7 @@ const rateLimit = require('express-rate-limit');
 const authenticate = require('./middleware/authenticate');
 const authRoute = require('./routes/auth-route');
 const bookingRoute = require('./routes/booking-route');
+const addOnRouter = require('./routes/addOn-router');
 const errorMiddleware = require('./middleware/error');
 const notFoundMiddleware = require('./middleware/not-found');
 
@@ -31,6 +32,7 @@ app.use(express.json());
 
 app.use('/auth', authRoute);
 app.use('/booking', authenticate, bookingRoute);
+app.use('/payment', authenticate, addOnRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

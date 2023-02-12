@@ -3,7 +3,7 @@ const {
   STATUS_UNAVAILABLE,
   STATUS_HOLDING,
 } = require('../config/constant');
-const apartment = require('./apartment');
+// const apartment = require('./apartment');
 
 module.exports = (sequelize, DataTypes) => {
   const Room = sequelize.define(
