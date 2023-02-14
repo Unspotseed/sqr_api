@@ -11,13 +11,14 @@ const rateLimit = require('express-rate-limit');
 const authenticate = require('./middleware/authenticate');
 const authRoute = require('./routes/auth-route');
 const bookingRoute = require('./routes/booking-route');
-const addOnRouter = require('./routes/addOn-router');
+const paymentRouter = require('./routes/payment-route');
+const orderStatusRoute = require('./routes/orderStatus-route');
 const errorMiddleware = require('./middleware/error');
 const notFoundMiddleware = require('./middleware/not-found');
 
 const app = express();
 
-app.use(morgan('combined')); // use dev is more short than combine and it log when sth is req
+app.use(morgan('dev')); // use dev is more short than combine and it log when sth is req
 app.use(
   rateLimit({
     windowMs: 10000 * 60 * 60,
@@ -32,7 +33,8 @@ app.use(express.json());
 
 app.use('/auth', authRoute);
 app.use('/booking', authenticate, bookingRoute);
-app.use('/payment', authenticate, addOnRouter);
+app.use('/payment', authenticate, paymentRouter);
+app.use('/orderStatus', authenticate, orderStatusRoute);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

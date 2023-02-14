@@ -8,18 +8,33 @@ module.exports = (sequelize, DataTypes) => {
   const Booking = sequelize.define('Booking', {
     order: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         notEmpty: true,
       },
     },
     month: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
+    timeStart: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    timeEnd: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+
     totalPrice: DataTypes.INTEGER,
     status: {
       type: DataTypes.ENUM(STATUS_FAIL, STATUS_CONFIRM, STATUS_PENDING),
