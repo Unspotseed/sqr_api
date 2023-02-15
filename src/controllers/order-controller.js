@@ -9,7 +9,7 @@ const createError = require('../utils/create-error');
 exports.createOrder = async (req, res, next) => {
   try {
     const value = req.body;
-    console.log(value);
+    // console.log(value);
     const room = await Room.findOne({ where: { id: value.roomId } });
     if (room.status !== STATUS_AVAILABLE) {
       createError('Room Unavailable or Holding', 400);
