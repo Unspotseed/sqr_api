@@ -1,4 +1,6 @@
+const fs = require('fs');
 const { Booking, Room, Payment } = require('../models');
+const cloudinary = require('../utils/cloudinary');
 const {
   STATUS_AVAILABLE,
   STATUS_UNAVAILABLE,
@@ -8,6 +10,7 @@ const {
 exports.getOrder = async (req, res, next) => {
   try {
     const booking = await Booking.findAll({
+      where: { userId: req.user.id },
       include: { model: Room },
     });
     res.status(201).json({ booking });
@@ -50,20 +53,31 @@ exports.cancelBooking = async (req, res, next) => {
 
 exports.createOrderRef = async (req, res, next) => {
   try {
+    // console.log(req.body);
     const value = req.body;
+
+    value.image = await cloudinary.upload(req.file?.path);
+
+    console.log(value, 'aaaaaaa');
     const createOrder = await Payment.create({
       paymentName: value.paymentName,
-      paymentLastName: value.email,
+      paymentLastName: value.paymentLastName,
       paymentEmail: value.paymentEmail,
       paymentRef: value.paymentRef,
       image: value.image,
-      bookingId: {
-        where: { id: req.params.bookingId },
-      },
+      bookingId: value.bookingId,
+      // bookingId: {
+      //   where: { id: req.params.bookingId },
+      // },
     });
 
     res.status(201).json({ createOrder });
+    // res.status(201).json({ createOrder });
   } catch (err) {
     next(err);
+  } finally {
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
   }
 };
