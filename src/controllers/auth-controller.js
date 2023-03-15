@@ -67,9 +67,13 @@ exports.login = async (req, res, next) => {
       createError('Invalid email or password', 400);
     }
     //get the user from validate the user
-    const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    });
+    const accessToken = jwt.sign(
+      { id: user.id, roll: user.roll },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      }
+    );
 
     res.status(200).json({ accessToken });
   } catch (err) {

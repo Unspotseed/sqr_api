@@ -1,6 +1,3 @@
-// const { sequelize } = require('./models');
-// sequelize.sync({ force: true });
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors'); // connect back and front

@@ -5,6 +5,8 @@ const {
   STATUS_AVAILABLE,
   STATUS_UNAVAILABLE,
   STATUS_HOLDING,
+  STATUS_CONFIRM,
+  STATUS_FAIL,
 } = require('../config/constant');
 
 exports.getOrder = async (req, res, next) => {
@@ -58,7 +60,7 @@ exports.createOrderRef = async (req, res, next) => {
 
     value.image = await cloudinary.upload(req.file?.path);
 
-    console.log(value, 'aaaaaaa');
+    // console.log(value, 'aaaaaaa');
     const createOrder = await Payment.create({
       paymentName: value.paymentName,
       paymentLastName: value.paymentLastName,
@@ -79,5 +81,88 @@ exports.createOrderRef = async (req, res, next) => {
     if (req.file) {
       fs.unlinkSync(req.file.path);
     }
+  }
+};
+
+exports.available = async (req, res, next) => {
+  try {
+    const { roomId } = req.params;
+    await Room.update({ status: STATUS_AVAILABLE }, { where: { id: roomId } });
+    res.status(201).json({ Message: 'Hi' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.holding = async (req, res, next) => {
+  try {
+    const { roomId } = req.params;
+    await Room.update({ status: STATUS_HOLDING }, { where: { id: roomId } });
+    res.status(201).json({ Message: 'Hi' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.unavailable = async (req, res, next) => {
+  try {
+    const { roomId } = req.params;
+    await Room.update(
+      { status: STATUS_UNAVAILABLE },
+      { where: { id: roomId } }
+    );
+    res.status(201).json({ Message: 'Hi' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getAllOrder = async (req, res, next) => {
+  try {
+    const booking = await Booking.findAll({ include: { model: Room } });
+    res.status(201).json({ booking });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.orderSuccess = async (req, res, next) => {
+  try {
+    const { bookingId } = req.params;
+    await Booking.update(
+      { status: STATUS_CONFIRM },
+      { where: { id: bookingId } }
+    );
+
+    const room = await Booking.findOne({
+      where: { id: req.params.bookingId },
+    });
+    await Room.update(
+      { status: STATUS_UNAVAILABLE },
+      { where: { id: room.roomId } }
+    );
+
+    res.status(201).json({ Message: 'Hi' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.orderFail = async (req, res, next) => {
+  try {
+    const { bookingId } = req.params;
+    await Booking.update({ status: STATUS_FAIL }, { where: { id: bookingId } });
+
+    const room = await Booking.findOne({
+      where: { id: req.params.bookingId },
+    });
+    await Room.update(
+      { status: STATUS_AVAILABLE },
+      { where: { id: room.roomId } }
+    );
+
+    res.status(201).json({ Message: 'Hi' });
+  } catch (err) {
+    next(err);
   }
 };
